@@ -1,6 +1,6 @@
 import React from 'react'
 import { AppBar, Toolbar, IconButton, Button, TextField, FormControl, TableContainer, Table,
-  TableHead, TableRow, TableCell, TableBody } from '@material-ui/core';
+  TableHead, TableRow, TableCell, TableBody, makeStyles, Container, Select, MenuItem } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Link } from 'react-router-dom';
 
@@ -9,14 +9,15 @@ class Page extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      addTodo: ['初期値', 'aaa'],
+      addTodo: [],
       textValue: '',
     };
   }
 
   addTodo(value) {
     const array = this.state.addTodo.slice();
-    array.push(value)
+    const newTodo = {todoName: value, progress: 'todo'}
+    array.push(newTodo)
     this.setState({addTodo: array})
     this.setState({textValue: ''})
   }
@@ -25,8 +26,29 @@ class Page extends React.Component {
     this.setState({textValue: value.target.value})
   }
 
+  deleteTodo(index) {
+    const array = this.state.addTodo.slice();
+    array.splice(index, 1)
+    this.setState({addTodo: array})
+  }
+
+  changeProgress(value, index) {
+    const array = this.state.addTodo.slice();
+    const newTodo = array[index]
+    newTodo.progress = value
+    array.splice(index, 1, newTodo)
+    this.setState({addTodo: array})
+  }
+
   render() {
     var array = this.state.addTodo.slice();
+    const  useStyles = makeStyles(() => ({
+      wrapperContents: {
+        width: '80%',
+        marginRight: '30px',
+        backgroundColor: 'blue',
+      },
+    }))
     return (
       <>
         <AppBar position="static">
@@ -37,36 +59,48 @@ class Page extends React.Component {
             <Button color="inherit" component={Link} to="/">top</Button>
           </Toolbar>
         </AppBar>
-        <h1>todoリスト</h1>
-        <FormControl>
-          <TextField id="standard-basic" label="todo" value={this.state.textValue} onChange={e => this.onChangeText(e)} />
-          <Button variant="contained" size="small" color="primary" onClick={() => this.addTodo(this.state.textValue)}>追加</Button>
-        </FormControl>
+        <Container>
+          <h1>todoリスト</h1>
+          <FormControl>
+            <TextField id="standard-basic" label="todo" value={this.state.textValue} onChange={e => this.onChangeText(e)} />
+            <Button variant="contained" size="small" color="primary" onClick={() => this.addTodo(this.state.textValue)}>追加</Button>
+          </FormControl>
 
-        {/* リスト */}
-        <TableContainer>
-          <Table aria-label="simple table" size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell align="center">todo名</TableCell>
-                <TableCell align="center">progress</TableCell>
-                <TableCell align="center">delete</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {array.map((row) => (
-                <TableRow key={row}>
-                  <TableCell align="center">{row}</TableCell>
-                  <TableCell align="center">進捗</TableCell>
-                  <TableCell align="center">削除</TableCell>
+          {/* リスト */}
+          <TableContainer className={useStyles.wrapperContents}>
+            <Table aria-label="simple table" size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">todo名</TableCell>
+                  <TableCell align="center">progress</TableCell>
+                  <TableCell align="center">delete</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {array.map((todo, index) => (
+                  <TableRow key={index}>
+                    <TableCell align="center">{todo.todoName}</TableCell>
+                    <TableCell align="center">
+                      <Select id={''+index} value={todo.progress} onChange={(e) => this.changeProgress(e.target.value, index)}>
+                        <MenuItem value={'todo'}>to do</MenuItem>
+                        <MenuItem value={'doing'}>doing</MenuItem>
+                        <MenuItem value={'done'}>done</MenuItem>
+                      </Select>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Button variant="contained" size="small" color="secondary" onClick={() => this.deleteTodo(index)}>削除</Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          </Container>
       </>
     )
   }
 }
+
+
 
 export default Page
