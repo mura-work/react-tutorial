@@ -1,6 +1,6 @@
 import { BrowserRouter,  Route, Switch, Link } from 'react-router-dom';
 import './App.css';
-import Game from './game'
+import Game from './tutorial/game'
 import Top from './top'
 
 function App() {
