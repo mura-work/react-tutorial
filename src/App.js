@@ -1,7 +1,8 @@
-import { BrowserRouter,  Route, Switch, Link } from 'react-router-dom';
+import { BrowserRouter,  Route, Switch } from 'react-router-dom';
 import './App.css';
 import Game from './tutorial/game'
 import Top from './top'
+import Todo from './todolist/page'
 
 function App() {
   return (
@@ -9,12 +10,10 @@ function App() {
       <Switch>
         <Route exact path='/' component={Top} />
         <Route path='/game' component={Game} />
+        <Route path='/todo' component={Todo} />
       </Switch>
-      <Link to='/'>Back To Top</Link>
     </BrowserRouter>
   );
 }
-
-
 
 export default App;
