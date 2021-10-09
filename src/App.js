@@ -1,15 +1,19 @@
+import { BrowserRouter,  Route, Switch } from 'react-router-dom';
 import './App.css';
-import Button from './button'
+import Game from './tutorial/game'
+import Top from './top'
+import Todo from './todolist/page'
 
 function App() {
   return (
-    <div className="App">
-      <h3>Material Ui</h3>
-      <Button >aaa</Button>
-    </div>
+    <BrowserRouter>
+      <Switch>
+        <Route exact path='/' component={Top} />
+        <Route path='/game' component={Game} />
+        <Route path='/todo' component={Todo} />
+      </Switch>
+    </BrowserRouter>
   );
 }
-
-
 
 export default App;
