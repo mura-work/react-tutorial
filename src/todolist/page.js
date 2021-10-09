@@ -3,7 +3,8 @@ import { AppBar, Toolbar, IconButton, Button, TextField, FormControl, TableConta
   TableHead, TableRow, TableCell, TableBody, makeStyles, Container, Select, MenuItem } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Link } from 'react-router-dom';
-
+import {db} from '../Firebase'
+import { collection, addDoc, getDocs } from "firebase/firestore";
 class Page extends React.Component {
   // クラスコンポーネントの時のhooks
   constructor(props) {
@@ -38,6 +39,21 @@ class Page extends React.Component {
     newTodo.progress = value
     array.splice(index, 1, newTodo)
     this.setState({addTodo: array})
+  }
+
+  async connectFirebase() {
+    const docRef = await addDoc(collection(db, 'todolists'), {
+      todoName: 'aaa',
+      progress: 'todo',
+    });
+    console.log(docRef)
+  }
+
+  async connectFirebaseRead () {
+    const querySnapshot = await getDocs(collection(db, "todolists"));
+    querySnapshot.forEach((doc) => {
+      console.log(`${doc.id} => ${doc.data()}`);
+    });
   }
 
   render() {
@@ -95,6 +111,8 @@ class Page extends React.Component {
               </TableBody>
             </Table>
           </TableContainer>
+          <Button variant="contained" size="small" color="primary" onClick={() => this.connectFirebase()}>firebaseと通信</Button>
+          <Button variant="contained" size="small" color="primary" onClick={() => this.connectFirebaseRead()}>firebase呼び出し</Button>
           </Container>
       </>
     )
